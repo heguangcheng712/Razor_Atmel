@@ -45,7 +45,8 @@ Function Declarations
 void UserApp1Initialize(void);
 void UserApp1RunActiveState(void);
 
-
+static  void User_state2(void);
+static  void User_state1(void);
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                  */
 /*--------------------------------------------------------------------------------------------------------------------*/
