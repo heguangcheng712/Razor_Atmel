@@ -88,7 +88,7 @@ Promises:
 void UserApp1Initialize(void)
 {
  
-  
+      DebugSetPassthrough();
       LedOff(GREEN);
       LedOff(YELLOW);
       LedOff(ORANGE);
@@ -152,20 +152,47 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
-     if(WasButtonPressed(BUTTON1))
+   u8 u8count=0;
+ 
+   u8 u8input[20];
+    static u8 u8inputcount=0;
+   static u8 u8data[20];
+   
+     
+    if(WasButtonPressed(BUTTON1))
    {
      ButtonAcknowledge(BUTTON1);
-     DebugPrintf("1");
-     DebugLineFeed();
+     ButtonAcknowledge(BUTTON2);
      UserApp1_StateMachine=User_state1;
    }  
    if(WasButtonPressed(BUTTON2))
    {
      ButtonAcknowledge(BUTTON2);
-     DebugPrintf("2");
+     ButtonAcknowledge(BUTTON1);
+     UserApp1_StateMachine=User_state2;
+   } 
+   
+   u8count=DebugScanf(u8input);
+   if(u8count==0){
+     return;
+   }
+   if(u8input[0]!='\r'){
+       
+       u8data[u8inputcount]=u8input[0];
+       u8inputcount++;
+       return;
+   }
+   if(u8data[0]=='1'){
+       DebugLineFeed();
+       UserApp1_StateMachine=User_state1;
+       return;
+   }
+   if(u8data[0]=='2'){
      DebugLineFeed();
      UserApp1_StateMachine=User_state2;
-   }  
+     return;
+   }
+   u8inputcount=0;
    
 } /* end UserApp1SM_Idle() */
     
@@ -178,6 +205,13 @@ static void UserApp1SM_Error(void)
 } /* end UserApp1SM_Error() */
 
 static  void User_state1(void){
+  
+   u8 u8count=0;
+ 
+   u8 u8input[20];
+    static u8 u8inputcount=0;
+   static u8 u8data[20];
+ 
    static u8 u8state_1=0;
    if(u8state_1==0){
       u8state_1=1;
@@ -207,14 +241,38 @@ static  void User_state1(void){
      ButtonAcknowledge(BUTTON2);
      ButtonAcknowledge(BUTTON1);
      u8state_1=0;
-     DebugPrintf("2");
+     //DebugPrintf("2");
      DebugLineFeed();
      UserApp1_StateMachine=User_state2;
    }  
-  
+   u8count=DebugScanf(u8input);
+   if(u8count==0){
+     return;
+   }
+   if(u8input[0]!='\r'){
+       
+       u8data[u8inputcount]=u8input[0];
+       u8inputcount++;
+       return;
+   }
+   if(u8data[0]=='2'){
+       ButtonAcknowledge(BUTTON1);
+       u8state_1=0;
+       DebugLineFeed();
+       UserApp1_StateMachine=User_state2;
+       return;
+   }
+   
+   u8inputcount=0;
 }
 static  void User_state2(void){
       
+  u8 u8count=0;
+ 
+   u8 u8input[20];
+    static u8 u8inputcount=0;
+   static u8 u8data[20];
+ 
   static u8 u8state_2=0;
   static u16 u16timecount=0;
   
@@ -258,11 +316,30 @@ static  void User_state2(void){
      ButtonAcknowledge(BUTTON1);
      ButtonAcknowledge(BUTTON2);
      u8state_2=0;
-     DebugPrintf("1");
+     //DebugPrintf("1");
      DebugLineFeed();
      UserApp1_StateMachine=User_state1;
    }  
-      
+   u8count=DebugScanf(u8input);
+   if(u8count==0){
+     
+       return;
+   }
+   if(u8input[0]!='\r'){
+       
+       u8data[u8inputcount]=u8input[0];
+       u8inputcount++;
+       return;
+   }
+   if(u8data[0]=='1'){
+       ButtonAcknowledge(BUTTON2);
+       u8state_2=0;
+       DebugLineFeed();
+       UserApp1_StateMachine=User_state1;
+       return;
+   }
+   
+   u8inputcount=0;  
   
 }
 /*--------------------------------------------------------------------------------------------------------------------*/
