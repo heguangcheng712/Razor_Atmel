@@ -197,6 +197,7 @@ static  void User_state1(void){
    if(WasButtonPressed(BUTTON2))
    {
      ButtonAcknowledge(BUTTON2);
+     ButtonAcknowledge(BUTTON1);
      u8state_1=0;
      DebugPrintf("2");
      DebugLineFeed();
@@ -247,6 +248,7 @@ static  void User_state2(void){
    if(WasButtonPressed(BUTTON1))
    {
      ButtonAcknowledge(BUTTON1);
+     ButtonAcknowledge(BUTTON2);
      u8state_2=0;
      DebugPrintf("1");
      DebugLineFeed();
