@@ -100,6 +100,7 @@ void UserApp1Initialize(void)
       LedOff(LCD_RED);
       LedOff(LCD_BLUE);
       LedOff(LCD_GREEN);
+      LedOn(LCD_BLUE);
       LCDCommand(LCD_CLEAR_CMD);
       LCDMessage(LINE1_START_ADDR+3, "Assignment");
   
@@ -158,7 +159,14 @@ static void UserApp1SM_Idle(void)
      DebugLineFeed();
      UserApp1_StateMachine=User_state1;
    }  
- 
+   if(WasButtonPressed(BUTTON2))
+   {
+     ButtonAcknowledge(BUTTON2);
+     DebugPrintf("2");
+     DebugLineFeed();
+     UserApp1_StateMachine=User_state2;
+   }  
+   
 } /* end UserApp1SM_Idle() */
     
 
@@ -223,7 +231,7 @@ static  void User_state2(void){
       LedOff(LCD_RED);
       LedOff(LCD_BLUE);
       LedOn(LCD_RED);
-      LedOn(LCD_GREEN);
+      LedPWM(LCD_GREEN,LED_PWM_30);
       PWMAudioSetFrequency(BUZZER1, 200);
       PWMAudioOn(BUZZER1);
       DebugPrintf("Entering state 2");
