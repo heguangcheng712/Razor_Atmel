@@ -49,6 +49,18 @@ void UserApp1RunActiveState(void);
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                  */
 /*--------------------------------------------------------------------------------------------------------------------*/
+#define   user_Channel   (u8)0x00
+#define   user_CType     CHANNEL_TYPE_MASTER
+#define   user_Net       (u8)0x00
+#define   user_NKey      (u8)0x00
+#define   user_DLo       (u8)0x76
+#define   user_DHi       (u8)0x52
+#define   user_DType     (u8)0x01
+#define   user_Tran      (u8)0x01
+#define   user_CPLo      (u8)0x00
+#define   user_CPLH      (u8)0x20
+#define   user_Fre       (u8)0x32
+#define   user_TPower    RADIO_TX_POWER_4DBM
 
 
 /***********************************************************************************************************************
