@@ -64,7 +64,7 @@ static AntAssignChannelInfoType   user_Assign_test;
 /**********************************************************************************************************************
 Function Definitions
 **********************************************************************************************************************/
-
+static u32  u32user_test_timeout;
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Public functions                                                                                                   */
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -109,12 +109,14 @@ void UserApp1Initialize(void)
   {
     if(AntAssignChannel(&user_Assign_test)){
       
+       u32user_test_timeout=G_u32SystemTime1ms;
+       UserApp1_StateMachine=User_assignment_set;
        
       
     }
     
     
-    UserApp1_StateMachine = UserApp1SM_Idle;
+   // UserApp1_StateMachine = UserApp1SM_Idle;
   }
   else
   {
@@ -154,14 +156,50 @@ void UserApp1RunActiveState(void)
 /**********************************************************************************************************************
 State Machine Function Definitions
 **********************************************************************************************************************/
-
+static void  User_assignment_set(void){
+  
+  
+  
+  if(AntRadioStatusChannel(user_Channel)==ANT_CONFIGURED){
+    
+      AntOpenChannelNumber(user_Channel);
+      UserApp1_StateMachine = UserApp1SM_Idle;
+    
+  }
+  if(IsTimeUp(u32user_test_timeout,3000)){
+    
+      UserApp1_StateMachine = UserApp1SM_Error;
+    
+  }
+  
+}
 /*-------------------------------------------------------------------------------------------------------------------*/
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
-
+     
+  if(
+  
+  
 } /* end UserApp1SM_Idle() */
     
+static void  User_assignment_set(void){
+  
+  
+  
+  if(AntRadioStatusChannel(user_Channel)==ANT_CONFIGURED){
+    
+      AntOpenChannelNumber(user_Channel);
+      UserApp1_StateMachine = UserApp1SM_Idle;
+    
+  }
+  if(IsTimeUp(u32user_test_timeout,3000)){
+    
+      UserApp1_StateMachine = UserApp1SM_Error;
+    
+  }
+  
+}
 
 /*-------------------------------------------------------------------------------------------------------------------*/
 /* Handle an error */
