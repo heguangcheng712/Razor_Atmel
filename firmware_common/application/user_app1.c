@@ -52,6 +52,8 @@ extern volatile u32 G_u32ApplicationFlags;             /* From main.c */
 extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
 extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
 
+extern u8 G_au8AntApiCurrentMessageBytes[ANT_APPLICATION_MESSAGE_BYTES];
+extern AntApplicationMessageType G_eAntApiCurrentMessageClass;
 
 /***********************************************************************************************************************
 Global variable definitions with scope limited to this local application.
@@ -87,6 +89,8 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
+  LedOff(RED);
+  LedOff(GREEN);
   /*set  the  value  into  the  user_Assign_test */
   user_Assign_test.AntChannel=user_Channel;
   user_Assign_test.AntChannelPeriodHi=user_CPLH;
@@ -166,7 +170,7 @@ static void  User_assignment_set(void){
       UserApp1_StateMachine = UserApp1SM_Idle;
     
   }
-  if(IsTimeUp(u32user_test_timeout,3000)){
+  if(IsTimeUp(&u32user_test_timeout,3000)){
     
       UserApp1_StateMachine = UserApp1SM_Error;
     
@@ -177,29 +181,80 @@ static void  User_assignment_set(void){
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
-     
-  if(
+  static  u8  au8messtest[8]={0x5b,0,0,0,0xff,0,0,0};
+  static  u8  u8messtype=1;
+  static  bool  bIsNeedTooRecvAck=FALSE; 
+  static  u32 u32time1=0;
+  static  u32 u32time2=0;
+  if(WasButtonPressed(BUTTON0)){
+    
+      ButtonAcknowledge(BUTTON0);
+      u8messtype=0;
+      //au8messtest[0]=0x7f;
+    
+  }
+  if(WasButtonPressed(BUTTON1)){
+    
+      ButtonAcknowledge(BUTTON1);
+      u8messtype=1;
+      //au8messtest[0]=0xf7;
+    
+  }
+  if(AntReadAppMessageBuffer()==FALSE){
+    
+      return;
+  }
+  if(G_eAntApiCurrentMessageClass==ANT_DATA){
+      LedOn(RED); 
+  }
+  if(G_eAntApiCurrentMessageClass==ANT_TICK){
+    
+    
+    if(bIsNeedTooRecvAck){
+      
+         bIsNeedTooRecvAck=FALSE;
+         if(G_au8AntApiCurrentMessageBytes[ANT_TICK_MSG_EVENT_CODE_INDEX]==EVENT_TRANSFER_TX_COMPLETED){
+             u32time2=G_u32SystemTime1ms;
+             au8messtest[3]++;
+             if(au8messtest[3]==0){
+                 au8messtest[2]++;
+                 if(au8messtest[2]==0){
+                    au8messtest[1]++; 
+                 }
+             }
+              //LedOn(GREEN);
+             return;
+         }
+    }
+    
+    
+    
+    au8messtest[7]++;
+             if(au8messtest[7]==0){
+                 au8messtest[6]++;
+                 if(au8messtest[6]==0){
+                    au8messtest[5]++; 
+                 }
+             }
+    if(u8messtype==1){
+    
+         AntQueueAcknowledgedMessage(user_Channel,au8messtest);
+         bIsNeedTooRecvAck=TRUE;
+         u32time1=G_u32SystemTime1ms;
+    }
+    if(u8messtype==0){
+    
+         AntQueueBroadcastMessage(user_Channel,au8messtest);
+    }
+    
+    
+  }
+
   
-  
+
 } /* end UserApp1SM_Idle() */
     
-static void  User_assignment_set(void){
-  
-  
-  
-  if(AntRadioStatusChannel(user_Channel)==ANT_CONFIGURED){
-    
-      AntOpenChannelNumber(user_Channel);
-      UserApp1_StateMachine = UserApp1SM_Idle;
-    
-  }
-  if(IsTimeUp(u32user_test_timeout,3000)){
-    
-      UserApp1_StateMachine = UserApp1SM_Error;
-    
-  }
-  
-}
+
 
 /*-------------------------------------------------------------------------------------------------------------------*/
 /* Handle an error */
