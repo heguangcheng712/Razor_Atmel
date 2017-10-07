@@ -63,6 +63,8 @@ void UserApp1RunActiveState(void);
 #define   user_TPower    RADIO_TX_POWER_4DBM
 
 
+#define   AntToSendBroad    (u8)0
+#define   AntToSendAck      (u8)1
 /***********************************************************************************************************************
 State Machine Declarations
 ***********************************************************************************************************************/
