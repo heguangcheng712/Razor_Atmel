@@ -215,10 +215,7 @@ static void UserApp1SM_WaitChannelAssign(void)
     LedOn(YELLOW);
 #endif /* EIE1 */
     
-#ifdef MPG2
-    LedOff(RED0);
-    LedOn(GREEN0);
-#endif /* MPG2 */
+
 
     UserApp1_StateMachine = UserApp1SM_Idle;
   }
@@ -231,7 +228,83 @@ static void UserApp1SM_WaitChannelAssign(void)
   }
       
 } /* end UserApp1SM_WaitChannelAssign() */
+/*-------------------------------------------------------------------------------------------------------------------*/
 
+
+
+/* Wait for the ANT channel assignment to finish */
+static void UserApp1SM_WaitChannelUnAssign(void)
+{
+  /* Check if the channel assignment is complete */
+  if(AntRadioStatusChannel(ANT_CHANNEL_USERAPP) == ANT_UNCONFIGURED)
+  {
+#ifdef EIE1
+    LedOff(RED);
+    LedOn(YELLOW);
+#endif /* EIE1 */
+ 
+    UserApp1_StateMachine = UserApp1SM_Reconfig;
+  }
+  
+  /* Monitor for timeout */
+  if( IsTimeUp(&UserApp1_u32Timeout, 5000) )
+  {
+    DebugPrintf("\n\r***Channel assignment timeout***\n\n\r");
+    UserApp1_StateMachine = UserApp1SM_Error;
+  }
+      
+} /* end UserApp1SM_WaitChannelAssign() */
+
+static  void UserApp1SM_Reconfig(void){
+  
+  /* Configure ANT for this application */
+   AntAssignChannelInfoType sAntSetupData;
+    LCDCommand(LCD_CLEAR_CMD);
+    LCDMessage(LINE1_START_ADDR, "MASTER"); 
+  sAntSetupData.AntChannel          = ANT_CHANNEL_USERAPP;
+  sAntSetupData.AntChannelType      = CHANNEL_TYPE_MASTER;
+  sAntSetupData.AntChannelPeriodLo  = ANT_CHANNEL_PERIOD_LO_USERAPP;
+  sAntSetupData.AntChannelPeriodHi  = ANT_CHANNEL_PERIOD_HI_USERAPP;
+  
+  sAntSetupData.AntDeviceIdLo       = ANT_DEVICEID_LO_USERAPP;
+  sAntSetupData.AntDeviceIdHi       = ANT_DEVICEID_HI_USERAPP;
+  sAntSetupData.AntDeviceType       = ANT_DEVICE_TYPE_USERAPP;
+  sAntSetupData.AntTransmissionType = ANT_TRANSMISSION_TYPE_USERAPP;
+  sAntSetupData.AntFrequency        = ANT_FREQUENCY_USERAPP;
+  sAntSetupData.AntTxPower          = ANT_TX_POWER_USERAPP;
+
+  sAntSetupData.AntNetwork = ANT_NETWORK_DEFAULT;
+  for(u8 i = 0; i < ANT_NETWORK_NUMBER_BYTES; i++)
+  {
+    sAntSetupData.AntNetworkKey[i] = ANT_DEFAULT_NETWORK_KEY;
+  }
+    
+  /* If good initialization, set state to Idle */
+  if( AntAssignChannel(&sAntSetupData) )
+  {
+    /* Channel assignment is queued so start timer */
+#ifdef EIE1
+    UserApp1_u32Timeout = G_u32SystemTime1ms;
+    LedOn(RED);
+#endif /* EIE1 */
+ 
+    
+    UserApp1_StateMachine = UserApp1SM_WaitChannelAssign;
+  }
+  else
+  {
+    /* The task isn't properly initialized, so shut it down and don't run */
+#ifdef EIE1
+    LedBlink(RED, LED_4HZ);
+#endif /* EIE1 */
+    
+
+    UserApp1_StateMachine = UserApp1SM_Error;
+  }
+
+   
+  
+}
 
   /*-------------------------------------------------------------------------------------------------------------------*/
 /* Wait for a message to be queued */
@@ -260,7 +333,12 @@ static void UserApp1SM_Idle(void)
     UserApp1_u32Timeout = G_u32SystemTime1ms;
     UserApp1_StateMachine = UserApp1SM_WaitChannelOpen;
   }
-    
+   if(WasButtonPressed(BUTTON1))
+  {
+  ButtonAcknowledge(BUTTON1);
+  AntUnassignChannelNumber(ANT_CHANNEL_USERAPP);
+  UserApp1_StateMachine=UserApp1SM_WaitChannelUnAssign;
+  }
 } /* end UserApp1SM_Idle() */
      
 
