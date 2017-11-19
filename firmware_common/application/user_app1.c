@@ -87,7 +87,11 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
- 
+  
+  AT91C_BASE_PIOA->PIO_PER    = (u32)0x30000000;
+  //AT91C_BASE_PIOA->PIO_PDR    = ~PIOA_PER_INIT;
+  AT91C_BASE_PIOA->PIO_OER    = PIOA_OER_INIT;
+  //AT91C_BASE_PIOA->PIO_ODR    = ~PIOA_OER_INIT;
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -136,6 +140,34 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
+  static   u8  u8count=0;
+  static   u8  u8speed=1;
+  static   u16 u16delay=0;
+  static   bool  bPstate=TRUE;
+  if(u16delay++>2000){
+    u16delay=0;
+    if(u8speed++>10){
+       
+      u8speed=1;
+      
+    }
+    
+  }
+  
+  if(u8count++>u8speed){
+    
+    u8count=0;
+    if(bPstate==TRUE){
+       bPstate=FALSE;
+       AT91C_BASE_PIOA->PIO_SODR=(u32)0x10000000;
+       
+    }else{
+       bPstate=TRUE;
+       AT91C_BASE_PIOA->PIO_CODR=(u32)0x10000000;
+    }
+    
+  }
+  
 
 } /* end UserApp1SM_Idle() */
     
