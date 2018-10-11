@@ -57,6 +57,16 @@ State Machine Declarations
 static void UserApp1SM_Idle(void);    
 
 static void UserApp1SM_Error(void);         
+#define   UserApiAnt_ChannelType ANT_MASTER
+#define   UserApiAnt_Network  (u8)0
+#define   UserApiAnt_IdLo     (u8)0x8c
+#define   UserApiAnt_IdHi     (u8)0x01
+#define   UserApiAnt_DeviceType (u8)1
+#define   UserApiAnt_TransmissionType (u8)1
+#define   UserApiAnt_AntChannelPeriodLo (u8)0x00
+#define   UserApiAnt_AntChannelPeriodHi (u8)0x20
+#define   UserApiAnt_Frequency (u8)50
+#define   UserApiAnt_TxPower    DEFAULT_RADIO_TX_POWER
 
 
 #endif /* __USER_APP1_H */

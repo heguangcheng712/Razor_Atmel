@@ -60,7 +60,7 @@ Variable names shall start with "UserApp1_" and be declared as static.
 static fnCode_type UserApp1_StateMachine;            /* The state machine function pointer */
 //static u32 UserApp1_u32Timeout;                      /* Timeout counter used across states */
 
-
+AntAssignChannelInfoType UserApp1_sChannelInfo;
 /**********************************************************************************************************************
 Function Definitions
 **********************************************************************************************************************/
@@ -88,6 +88,16 @@ Promises:
 void UserApp1Initialize(void)
 {
  
+  
+  UserApp1_sChannelInfo.AntChannel=ANT_CHANNEL_0;
+  UserApp1_sChannelInfo.AntChannelType=UserApiAnt_ChannelType;
+  UserApp1_sChannelInfo.AntDeviceIdLo=UserApiAnt_IdLo;
+  UserApp1_sChannelInfo.AntChannelPeriodHi=UserApiAnt_IdHi;
+  UserApp1_sChannelInfo.AntChannelPeriodLo=UserApiAnt_AntChannelPeriodLo;
+  UserApp1_sChannelInfo.AntFrequency=
+  
+  
+  
   /* If good initialization, set state to Idle */
   if( 1 )
   {
