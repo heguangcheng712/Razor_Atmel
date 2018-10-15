@@ -51,7 +51,7 @@
 //////////////////////////////////////////////
 #define DEFAULT_CHANNEL_MESSAGE_FREQUENCY          ((ULONG)4)
 #define DEFAULT_CHANNEL_MESSAGE_PERIOD             ((USHORT)( ANT_CLOCK_FREQUENCY / DEFAULT_CHANNEL_MESSAGE_FREQUENCY )) ///< 8192 (4Hz)
-#define DEFAULT_RADIO_TX_POWER                     RADIO_TX_POWER_0DB      ///< ANT default RF power
+#define DEFAULT_RADIO_TX_POWER                     RADIO_TX_POWER_0DBM      ///< ANT default RF power
 #define DEFAULT_RADIO_CHANNEL                      ((UCHAR)66)             ///< 2400MHz + 1MHz * Channel Number = 2466MHz
 #define DEFAULT_RX_SEARCH_TIMEOUT                  ((UCHAR)12)             ///< 12 * 2.5 seconds = 30 seconds
 

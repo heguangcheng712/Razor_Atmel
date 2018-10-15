@@ -61,8 +61,9 @@ static fnCode_type UserApp1_StateMachine;            /* The state machine functi
 //static u32 UserApp1_u32Timeout;                      /* Timeout counter used across states */
 
 AntAssignChannelInfoType UserApp1_sChannelInfo;
+static  u32  UserApp_u32Timeout;
 /**********************************************************************************************************************
-Function Definitions
+Functiotn Definitions
 **********************************************************************************************************************/
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -92,16 +93,21 @@ void UserApp1Initialize(void)
   UserApp1_sChannelInfo.AntChannel=ANT_CHANNEL_0;
   UserApp1_sChannelInfo.AntChannelType=UserApiAnt_ChannelType;
   UserApp1_sChannelInfo.AntDeviceIdLo=UserApiAnt_IdLo;
+  UserApp1_sChannelInfo.AntDeviceIdHi=UserApiAnt_IdHi;
   UserApp1_sChannelInfo.AntChannelPeriodHi=UserApiAnt_IdHi;
   UserApp1_sChannelInfo.AntChannelPeriodLo=UserApiAnt_AntChannelPeriodLo;
-  UserApp1_sChannelInfo.AntFrequency=
+  UserApp1_sChannelInfo.AntFrequency=UserApiAnt_Frequency;
+  UserApp1_sChannelInfo.AntTxPower=UserApiAnt_TxPower;
+  UserApp1_sChannelInfo.AntNetwork=UserApiAnt_Network;
+  for(u8 i=0;i<8;i++){ 
+      
+    UserApp1_sChannelInfo.AntNetworkKey[i]=0x00;
   
-  
-  
-  /* If good initialization, set state to Idle */
-  if( 1 )
-  {
-    UserApp1_StateMachine = UserApp1SM_Idle;
+  }
+  if(AntAssignChannel(&UserApp1_sChannelInfo)){
+    
+   UserApp_u32Timeout= 
+   UserApp1_StateMachine=UserApp1SM_AntChannelAssign;
   }
   else
   {
