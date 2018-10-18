@@ -106,7 +106,7 @@ void UserApp1Initialize(void)
   }
   if(AntAssignChannel(&UserApp1_sChannelInfo)){
     
-   UserApp_u32Timeout= 
+   UserApp_u32Timeout= G_u32SystemTime1ms;
    UserApp1_StateMachine=UserApp1SM_AntChannelAssign;
   }
   else
@@ -117,7 +117,20 @@ void UserApp1Initialize(void)
 
 } /* end UserApp1Initialize() */
 
+static void UserApp1SM_AntChannelAssign(void){
   
+  if(AntRadioStatusChannel(ANT_CHANNEL_0)==ANT_CONFIGURED){
+  
+         AntOpenChannelNumber(ANT_CHANNEL_0);
+         UserApp1_StateMachine=UserApp1SM_Idle;
+         return;
+  }
+  if(IsTimeUp(&UserApp_u32Timeout,3000)){
+    
+    UserApp1_StateMachine = UserApp1SM_Error;
+  }
+  
+}
 /*----------------------------------------------------------------------------------------------------------------------
 Function UserApp1RunActiveState()
 
