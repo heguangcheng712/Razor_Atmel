@@ -60,7 +60,7 @@ static void UserApp1SM_Error(void);
 
 
 static void UserApp1SM_AntChannelAssign(void);
-#define   UserApiAnt_ChannelType ANT_MASTER
+#define   UserApiAnt_ChannelType CHANNEL_TYPE_MASTER//ANT_MASTER
 #define   UserApiAnt_Network  (u8)0
 #define   UserApiAnt_IdLo     (u8)0x8c
 #define   UserApiAnt_IdHi     (u8)0x01
