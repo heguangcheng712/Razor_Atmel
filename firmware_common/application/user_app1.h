@@ -66,8 +66,8 @@ static void UserApp1SM_AntChannelAssign(void);
 #define   UserApiAnt_IdHi     (u8)0x01
 #define   UserApiAnt_DeviceType (u8)1
 #define   UserApiAnt_TransmissionType (u8)1
-#define   UserApiAnt_AntChannelPeriodLo (u8)0x00
-#define   UserApiAnt_AntChannelPeriodHi (u8)0x20
+#define   UserApiAnt_AntChannelPeriodLo (u8)0
+#define   UserApiAnt_AntChannelPeriodHi (u8)32
 #define   UserApiAnt_Frequency (u8)50
 #define   UserApiAnt_TxPower    DEFAULT_RADIO_TX_POWER
 

@@ -65,7 +65,10 @@ static  u32  UserApp_u32Timeout;
 /**********************************************************************************************************************
 Functiotn Definitions
 **********************************************************************************************************************/
-
+extern u32 G_u32AntApiCurrentMessageTimeStamp;                             /* Current read message's G_u32SystemTime1ms */
+extern AntApplicationMessageType G_eAntApiCurrentMessageClass;     /* Type of data */
+extern u8 G_au8AntApiCurrentMessageBytes[ANT_APPLICATION_MESSAGE_BYTES];       /* Array for message payload data */
+extern AntExtendedDataType G_sAntApiCurrentMessageExtData;   
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Public functions                                                                                                   */
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -94,7 +97,9 @@ void UserApp1Initialize(void)
   UserApp1_sChannelInfo.AntChannelType=UserApiAnt_ChannelType;
   UserApp1_sChannelInfo.AntDeviceIdLo=UserApiAnt_IdLo;
   UserApp1_sChannelInfo.AntDeviceIdHi=UserApiAnt_IdHi;
-  UserApp1_sChannelInfo.AntChannelPeriodHi=UserApiAnt_IdHi;
+  UserApp1_sChannelInfo.AntDeviceType=UserApiAnt_DeviceType;
+  UserApp1_sChannelInfo.AntTransmissionType=UserApiAnt_TransmissionType;
+  UserApp1_sChannelInfo.AntChannelPeriodHi=UserApiAnt_AntChannelPeriodHi;
   UserApp1_sChannelInfo.AntChannelPeriodLo=UserApiAnt_AntChannelPeriodLo;
   UserApp1_sChannelInfo.AntFrequency=UserApiAnt_Frequency;
   UserApp1_sChannelInfo.AntTxPower=UserApiAnt_TxPower;
@@ -165,7 +170,24 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
-
+  
+  static u32  u32AntData_count=0;
+  static u32  u32AntTick_count=0;
+  if(AntReadAppMessageBuffer()){
+    
+    if(G_eAntApiCurrentMessageClass == ANT_DATA){
+      
+       u32AntData_count++;
+    }
+    
+    if(G_eAntApiCurrentMessageClass == ANT_TICK){
+      
+       u32AntTick_count++;
+    }
+    
+    
+    
+  }
 } /* end UserApp1SM_Idle() */
     
 
