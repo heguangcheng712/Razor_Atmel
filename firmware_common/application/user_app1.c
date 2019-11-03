@@ -87,7 +87,7 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
- 
+  LedOff(WHITE);
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -136,6 +136,15 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
+  static u16 u16LedLoop=0;
+  u16LedLoop++;
+  if(u16LedLoop>=500){
+       
+      u16LedLoop=0;
+      LedToggle(WHITE);
+    
+    
+  }
 
 } /* end UserApp1SM_Idle() */
     
