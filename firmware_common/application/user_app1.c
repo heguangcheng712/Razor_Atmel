@@ -88,6 +88,7 @@ Promises:
 void UserApp1Initialize(void)
 {
   LedOff(WHITE);
+  
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -138,10 +139,12 @@ static void UserApp1SM_Idle(void)
 {
   static u16 u16LedLoop=0;
   u16LedLoop++;
-  if(u16LedLoop>=500){
-       
+  if(u16LedLoop>=60){
+      LCDCommand(LCD_CLEAR_CMD);
+      //LCDMessage(LINE1_START_ADDR,"WELCOME!");
       u16LedLoop=0;
       LedToggle(WHITE);
+      LedPWM(RED,LED_PWM_35);
     
     
   }
