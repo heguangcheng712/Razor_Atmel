@@ -136,7 +136,30 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
-
+    static  u16   u16Count=0;
+    static  u8    u8LedState=0;
+    
+    u16Count++;
+    if(u16Count>=500){
+        
+       u16Count=0;
+       if(u8LedState==0){
+         
+          u8LedState=1;
+          HEARTBEAT_ON();
+         
+       }else{
+         
+          u8LedState=0;
+          HEARTBEAT_OFF();
+         
+       }
+      
+      
+    }
+    
+  
+  
 } /* end UserApp1SM_Idle() */
     
 
