@@ -87,7 +87,8 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
- 
+   HEARTBEAT_OFF();
+  //LedOff(YELLOW);
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -136,22 +137,41 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
+    static  u16   u16TimeDelay3s=0;
     static  u16   u16Count=0;
     static  u8    u8LedState=0;
+    static  u16   u16Counter_Limit=500;
     
+    
+    
+    u16TimeDelay3s++;
+    if(u16TimeDelay3s>=COUNTER_DELAY_S){
+       
+       u16TimeDelay3s=0;
+       
+       u16Counter_Limit/=2;
+       
+    }
+    
+    
+    /* Increment u16Count every 1ms cycle */
     u16Count++;
-    if(u16Count>=500){
+    /* Check and roll over */
+    if(u16Count>=u16Counter_Limit){
         
-       u16Count=0;
+       
+      u16Count=0;
        if(u8LedState==0){
-         
+         // LCDCommand(LCD_CLEAR_CMD);
+          //LCDMessage(LINE1_START_ADDR+8,"WelCome!");
           u8LedState=1;
-          HEARTBEAT_ON();
+          HEARTBEAT_OFF();
          
        }else{
-         
+         // LCDCommand(LCD_CLEAR_CMD);
+          //LCDMessage(LINE1_START_ADDR+8,"Hello!");
           u8LedState=0;
-          HEARTBEAT_OFF();
+          HEARTBEAT_ON();
          
        }
       
@@ -162,7 +182,24 @@ static void UserApp1SM_Idle(void)
   
 } /* end UserApp1SM_Idle() */
     
+static void UserApp1Yellow_On3S(void){
 
+   static  u16  u16TimeCount=0;
+   u16TimeCount++;
+   LedOn(YELLOW);
+   if(u16TimeCount>=3000){
+     
+       u16TimeCount=0;
+       LedOff(YELLOW);
+       
+       UserApp1_StateMachine = UserApp1SM_Idle;
+     
+   }
+   
+  
+  
+  
+}
 /*-------------------------------------------------------------------------------------------------------------------*/
 /* Handle an error */
 static void UserApp1SM_Error(void)          
