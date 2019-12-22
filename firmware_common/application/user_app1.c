@@ -44,6 +44,8 @@ All Global variable names shall start with "G_UserApp1"
 volatile u32 G_u32UserApp1Flags;                       /* Global state flags */
 
 
+
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
 extern volatile u32 G_u32SystemFlags;                  /* From main.c */
@@ -87,7 +89,7 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
- 
+  LedOff(YELLOW);
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -136,7 +138,63 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
-
+  static  u8   au8LedChange[11]={5,6,7,8,9,10,13,17,25,50,0};
+  static  u16  u16LedCounter=0;
+  static  bool bChangeState=TRUE;
+  static  u8   u8ChangeCounter=0;
+  static  u8   u8LedDelay=0;
+  static  u8   u8LedDelay_MAX=5;
+  
+  u16LedCounter++;
+  if(u16LedCounter>=1000){
+     
+     u16LedCounter=0;
+     
+     if(bChangeState){
+       
+       if(u8ChangeCounter<10){
+          
+          u8ChangeCounter++;
+          u8LedDelay_MAX=au8LedChange[u8ChangeCounter];
+       }else{
+          u8ChangeCounter=0;
+          bChangeState=FALSE;
+                  
+       }
+     }else{
+       
+       if(u8ChangeCounter<10){
+          
+          u8ChangeCounter++;
+          u8LedDelay_MAX=au8LedChange[10-u8ChangeCounter];
+       }else{
+          u8ChangeCounter=0;
+          bChangeState=TRUE;
+                  
+       }
+       
+       
+     }
+    
+    
+  }
+  u8LedDelay++;
+  
+  if(u8LedDelay_MAX==0){
+    
+     u8LedDelay=0;
+     LedOn(YELLOW);
+     
+  }else if(u8LedDelay>=u8LedDelay_MAX){
+     
+     u8LedDelay=0;
+     LedToggle(YELLOW);
+     
+  }
+   
+  
+  
+   
 } /* end UserApp1SM_Idle() */
     
 
